@@ -37,6 +37,13 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	fmt.Fprintf(w, "%+v", string(reqBody))
 
+	var article Article
+	json.Unmarshal(reqBody, &article)
+
+	articles = append(articles, article)
+	json.NewEncoder(w).Encode(article)
+	//hrllocoocmw
+
 }
 
 func returnSingleArticles(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +64,7 @@ func handleRequests() {
 
 	myRouter.HandleFunc("/", homepage)
 	myRouter.HandleFunc("/articles", returnAllArticles)
-	myRouter.HandleFunc("/articles", createNewArticle).Methods("POST")
+	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
 	myRouter.HandleFunc("/articles/{id}", returnSingleArticles)
 	log.Fatal(http.ListenAndServe(":10000", myRouter))
 }
